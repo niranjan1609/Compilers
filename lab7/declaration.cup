@@ -1,0 +1,108 @@
+import java_cup.runtime.*;
+import java.util.*;
+
+init with {: :};
+
+action code {: Map<String,String> hash = new HashMap<String,String>(); :};
+
+scan with {: return getScanner().next_token(); :};
+terminal INT,STRING,COMMA,ID, SPACE, EOFILE,NL,EQ,QUOTE,STR,NIL,VAR,FLOAT,DECIMAL,SEMI,NUM;
+non terminal prog, stmt, decln, s,val, defn, intvarlist, floatvarlist, stringvarlist;
+s ::= prog {: System.out.println("Completed Parsing");System.exit(0); :} EOFILE {:System.exit(0);:} ;
+prog ::= prog stmt|stmt;
+stmt ::= decln|SPACE|NL|defn ;
+
+decln ::=  INT SPACE intvarlist SEMI | FLOAT SPACE floatvarlist SEMI | STRING SPACE stringvarlist SEMI;
+intvarlist  ::=  ID:e COMMA intvarlist {: 
+					if(hash.get(e)==null)
+						{
+						System.out.println("Valid Declaration, Adding INT to HashMap");
+						hash.put(e.toString(),"INT");
+						}
+					else{
+						System.out.println("Error : Dupicate Declaration");					
+						}:}
+			| ID:e {: 
+					if(hash.get(e)==null)
+						{
+						System.out.println("Valid Declaration, Adding INT to HashMap");
+						hash.put(e.toString(),"INT");
+						}
+					else{
+						System.out.println("Error : Dupicate Declaration");					
+						}:} | ID EQ NUM COMMA intvarlist | ID EQ NUM;
+floatvarlist  ::=  ID:e COMMA floatvarlist {: 
+					if(hash.get(e)==null)
+						{
+						System.out.println("Valid Declaration, Adding INT to HashMap");
+						hash.put(e.toString(),"FLOAT");
+						}
+					else{
+						System.out.println("Error : Dupicate Declaration");					
+						}:}
+			| ID:e {: 
+					if(hash.get(e)==null)
+						{
+						System.out.println("Valid Declaration, Adding INT to HashMap");
+						hash.put(e.toString(),"FLOAT");
+						}
+					else{
+						System.out.println("Error : Dupicate Declaration");					
+						}:} | ID EQ DECIMAL COMMA floatvarlist | ID EQ DECIMAL;
+						
+stringvarlist  ::=  ID:e COMMA stringvarlist {: 
+					if(hash.get(e)==null)
+						{
+						System.out.println("Valid Declaration, Adding INT to HashMap");
+						hash.put(e.toString(),"STRING");
+						}
+					else{
+						System.out.println("Error : Dupicate Declaration");					
+						}:}
+			| ID:e {: 
+					if(hash.get(e)==null)
+						{
+						System.out.println("Valid Declaration, Adding INT to HashMap");
+						hash.put(e.toString(),"STRING");
+						}
+					else{
+						System.out.println("Error : Dupicate Declaration");					
+						}:};
+
+
+defn ::= ID:e EQ NUM SEMI {:
+			if(hash.get(e)==null){
+			System.out.println("Variable not declared");
+			}
+			else if(hash.get(e).equals("INT"))
+			{
+			System.out.println("Valid Assignment \n");
+			}
+			else
+			{
+			System.out.println("Error: Invalid Assignment \n");
+			}:}
+	| ID:e EQ DECIMAL SEMI {: if(hash.get(e)==null)
+			{
+			System.out.println("Variable not Declared \n");
+			}
+			else if(hash.get(e).equals("FLOAT"))
+			{
+			System.out.println("Valid Assignment \n");
+			}
+			else
+			{
+			System.out.println("Error: Invalid Assignment \n");
+			}:}
+	| ID:e EQ STR SEMI {: if(hash.get(e)==null)
+			{
+			System.out.println("variable not declared");
+			}
+			else if(hash.get(e).equals("STRING"))
+			{
+			System.out.println("Valid Assignment \n");
+			}
+			else
+			{
+			System.out.println("Error: Invalid Assignment \n");
+			}:};

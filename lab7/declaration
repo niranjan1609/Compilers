@@ -1,0 +1,20 @@
+import java_cup.runtime.Symbol;
+import java_cup.runtime.Scanner;
+%%
+%cup
+%eofval{
+return new Symbol(sym.EOFILE);
+%eofval}
+%%
+[\n] {System.out.println("NewLine: "+yytext());return new Symbol(sym.NL);}
+";" {System.out.println("SemiColumn: "+yytext());return new Symbol(sym.SEMI);}
+"," {System.out.println("Comma: "+yytext());return new Symbol(sym.COMMA);}
+"=" {System.out.println("Equals: "+yytext());return new Symbol(sym.EQ);}
+" " {System.out.println("Space: "+yytext());return new Symbol(sym.SPACE);}
+"int" {System.out.println("Integer: "+yytext());return new Symbol(sym.INT);}
+"string" {System.out.println("String: "+yytext());return new Symbol(sym.STRING);}
+"float" {System.out.println("Float: "+yytext());return new Symbol(sym.FLOAT);}
+[a-zA-z][a-z0-9]* {System.out.println("Identifier: "+yytext());return new Symbol(sym.ID,new String(yytext()));}
+[0-9]+ {System.out.println("Number: "+yytext());return new Symbol(sym.NUM ,new Integer(yytext()));}
+[0-9]+"."[0-9]* {System.out.println("Decimal: "+yytext());return new Symbol(sym.DECIMAL);}
+[\"a-zA-Z0-9$\"]* {System.out.println("Strings: "+yytext());return new Symbol(sym.STR, new String(yytext()));}
